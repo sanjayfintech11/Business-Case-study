@@ -1,19 +1,58 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  smokeTag: 'Smoke'
+  regressionTag: 'Regression'
+  EndtoendTag: 'End to End'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+- stage: dev
+  displayName: 'Dev'
+  jobs:
+  - job: Build_Dev
+    displayName: 'Build Job'
+    steps:
+    - script: echo "Building the application..."
+
+  - job: Test_Dev
+    displayName: 'Smoke Tests'
+    condition: contains(variables['Build.SourceBranch'], 'refs/heads/main')  # Run only for the 'main' branch
+    steps:
+    - script: echo "Running smoke tests..."
+      displayName: 'Run Smoke Tests'
+
+  - job: Test_Dev_1
+    displayName: 'Regression Tests'
+    steps:
+    - script: echo "Running regression tests..."
+      displayName: 'Run Regression Tests'
+
+- stage: test
+  displayName: 'test'
+  jobs:
+  - job: Build_test
+    displayName: 'Build Job'
+    steps:
+    - script: echo "Building the application..."
+
+  - job: Test_2
+    displayName: 'Smoke Tests'
+    condition: contains(variables['Build.SourceBranch'], 'refs/heads/main')  # Run only for the 'main' branch
+    steps:
+    - script: echo "Running smoke tests..."
+      displayName: 'Run Smoke Tests'
+
+  - job: Test_3
+    displayName: 'Regression Tests'
+    steps:
+    - script: echo "Running regression tests..."
+      displayName: 'Run Regression Tests'
+
+# Continue defining stages and jobs as needed...
+
